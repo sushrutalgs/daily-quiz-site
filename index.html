@@ -165,8 +165,8 @@
     .expl-body h2,.expl-body h3{font-size:0.82rem;font-weight:700;color:#1d1d1f;margin:12px 0 4px;line-height:1.4}
     .expl-body h2:first-child,.expl-body h3:first-child{margin-top:0}
     .expl-body p{margin:4px 0}
-    .expl-body ul,.expl-body ol{margin:4px 0 4px 18px;padding:0}
-    .expl-body li{margin:3px 0}
+    .expl-body ul,.expl-body ol{margin:2px 0 2px 18px;padding:0}
+    .expl-body li{margin:1px 0;line-height:1.55}
     .expl-body strong,.expl-body b{font-weight:700;color:#1d1d1f}
     .expl-body em,.expl-body i{font-style:italic}
     .expl-body hr{border:none;border-top:1px solid #d4e4fc;margin:10px 0}
@@ -304,15 +304,28 @@ const escA=s=>s.replace(/'/g,"\\'");
 const ft=s=>{if(!s)return'0s';const m=Math.floor(s/60);return m?m+'m '+(s%60)+'s':s+'s'};
 const fd=s=>new Date(s+'T00:00:00').toLocaleDateString('en-IN',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
 
+// ── Clean image garbage from any text ──
+function cleanText(t){
+  if(!t)return'';
+  // Strip all variations of image alt text markers
+  t=t.replace(/[-–—]{2,}\s*Image alt text\s*[-–—>:→]+[^-–—\n]*[-–—]*/gi,'');
+  t=t.replace(/Description automatically generated[^<\n]*/gi,'');
+  t=t.replace(/[-–—]{2,}\s*media\/[^\s<\n]+\s*[-–—]*/gi,'');
+  t=t.replace(/\bmedia\/image\d*\.\w+/gi,'');
+  t=t.replace(/Image alt text[>→:]+[^<\n]*/gi,'');
+  // Clean leftover dashes/arrows (4+ dashes)
+  t=t.replace(/[-–—]{4,}/g,'');
+  // Clean leftover arrows
+  t=t.replace(/[←→⟵⟶]+/g,'');
+  // Trim excessive whitespace
+  t=t.replace(/\n{3,}/g,'\n\n');
+  return t.trim();
+}
+
 // ── Markdown-like renderer for explanations ──
 function renderExpl(text){
   if(!text)return'';
-  let h=text;
-  // Strip raw image references like ----Image alt text--->...----media/image1.jpeg----
-  h=h.replace(/----Image alt text[^-]*[-—>]+[^-]*----/gi,'');
-  h=h.replace(/[-—]{3,}media\/[^\s-]+[-—]{3,}/gi,'');
-  h=h.replace(/Description automatically generated[^-]*[-—]+[^-]*[-—]+/gi,'');
-  h=h.replace(/----+/g,'');
+  let h=cleanText(text);
   // Escape HTML
   h=esc(h);
   // Headings: ## and ###
@@ -325,10 +338,12 @@ function renderExpl(text){
   h=h.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g,'<em>$1</em>');
   // Horizontal rules
   h=h.replace(/^---+$/gm,'<hr>');
-  // Bullet lists: -- or - at start
+  // Bullet lists: -- or - at start of line
   h=h.replace(/^(?:--|[-*])\s+(.+)$/gm,'<li>$1</li>');
-  // Wrap consecutive <li> in <ul>
-  h=h.replace(/((?:<li>.*?<\/li>\n?)+)/gs,'<ul>$1</ul>');
+  // Wrap consecutive <li> in <ul> (no extra newlines between them)
+  h=h.replace(/((?:<li>.*?<\/li>(?:<br>|\n)*)+)/gs,function(m){
+    return '<ul>'+m.replace(/<br>/g,'')+'</ul>';
+  });
   // Markdown pipe tables
   h=h.replace(/^(\|.+\|)\n(\|[-:| ]+\|)\n((?:\|.+\|\n?)+)/gm,function(m,hdr,sep,body){
     var cols=hdr.split('|').filter(c=>c.trim());
@@ -341,10 +356,10 @@ function renderExpl(text){
   h=h.replace(/\(Ref:\s*([^)]+)\)/g,'<span style="color:#7c3aed;font-weight:600;font-size:0.68rem">(Ref: $1)</span>');
   // Paragraphs: double newlines
   h=h.replace(/\n{2,}/g,'</p><p>');
-  // Single newlines to <br>
+  // Single newlines to <br> (but not inside <ul>)
   h=h.replace(/\n/g,'<br>');
-  // Clean up empty paragraphs
   h='<p>'+h+'</p>';
+  // Clean up wrapping
   h=h.replace(/<p>\s*<\/p>/g,'');
   h=h.replace(/<p>\s*(<h[23]>)/g,'$1');
   h=h.replace(/(<\/h[23]>)\s*<\/p>/g,'$1');
@@ -353,6 +368,9 @@ function renderExpl(text){
   h=h.replace(/<p>\s*(<ul>)/g,'$1');
   h=h.replace(/(<\/ul>)\s*<\/p>/g,'$1');
   h=h.replace(/<p>\s*(<hr>)\s*<\/p>/g,'$1');
+  // Remove <br> right before/after block elements
+  h=h.replace(/<br>\s*(<\/?(?:ul|li|h[23]|table|thead|tbody|tr|td|th|hr|p))/gi,'$1');
+  h=h.replace(/(<\/?(?:ul|li|h[23]|table|thead|tbody|tr|td|th|hr|p)>)\s*<br>/gi,'$1');
   return h;
 }
 
@@ -398,7 +416,7 @@ function renderQ(){
   });
   let h=`<div class="qh"><div class="qbg">Question ${q.number}</div></div>`;
   if(q.question_image?.length)q.question_image.forEach(img=>{if(img)h+=`<div class="qimg"><img src="${img.startsWith('http')?img:API+'/'+img}"></div>`});
-  h+=`<div class="qtxt">${esc(q.question_text||'')}</div><div class="opts">`;
+  h+=`<div class="qtxt">${esc(cleanText(q.question_text||''))}</div><div class="opts">`;
   const K='ABCDEF';
   q.options.forEach((o,i)=>{
     const sl=ans[q._id]===o.value?' sel':'';
@@ -468,8 +486,9 @@ async function fetchSolutions(sa){
 
     // Options
     let oh='';
+    const cOpt=a.correct_option||sol.correct_option||'';
     if(q?.options){oh='<div class="sol-ol">'+q.options.map((o,oi)=>{
-      let c='';if(o.value===a.correct_option)c='gc';else if(o.value===a.selected&&!a.correct)c='rc';
+      let c='';if(o.value===cOpt)c='gc';else if(o.value===a.selected&&!a.correct)c='rc';
       return`<div class="sol-o ${c}"><div class="sol-ok">${K[oi]}</div>${esc(o.answer_title||o.value)}</div>`;
     }).join('')+'</div>'}
 
@@ -480,7 +499,9 @@ async function fetchSolutions(sa){
       eh=`<div class="expl"><div class="expl-t">Explanation</div><div class="expl-body">${rendered}</div>${(sol.explanation_image||[]).filter(x=>x).map(img=>`<div class="expl-img"><img src="${img.startsWith('http')?img:API+'/'+img}"></div>`).join('')}</div>`;
     }
 
-    return`<div class="sol-c${i===0?' op':''}" onclick="this.classList.toggle('op')"><div class="sol-h"><div class="sol-s ${st}">${ic}</div><div class="sol-q">${i+1}. ${esc((q?.question_text||'').substring(0,120))}${(q?.question_text||'').length>120?'...':''}</div><div class="sol-ch">&#x25BC;</div></div><div class="sol-b"><div class="sol-ai"><span class="d">Your answer: <b>${a.selected||'Skipped'}</b></span>${!a.correct?`<span class="${a.selected?'r':'d'}">Correct: <b>${a.correct_option}</b></span>`:''}</div>${hasMeta?mh:''}${oh}${eh}</div></div>`;
+    const cleanQ=cleanText(q?.question_text||'');
+    const correctOpt=a.correct_option||sol.correct_option||'?';
+    return`<div class="sol-c${i===0?' op':''}" onclick="this.classList.toggle('op')"><div class="sol-h"><div class="sol-s ${st}">${ic}</div><div class="sol-q">${i+1}. ${esc(cleanQ.substring(0,120))}${cleanQ.length>120?'...':''}</div><div class="sol-ch">&#x25BC;</div></div><div class="sol-b"><div class="sol-ai"><span class="d">Your answer: <b>${a.selected||'Skipped'}</b></span>${!a.correct?`<span class="${a.selected?'r':'d'}">Correct: <b>${correctOpt}</b></span>`:''}</div>${hasMeta?mh:''}${oh}${eh}</div></div>`;
   }).join('');
 }
 
