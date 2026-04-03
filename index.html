@@ -179,9 +179,33 @@
     .expl-img img{width:100%;display:block}
 
     /* ── CTA ── */
-    .cta{background:#fff;border:1px solid #e8e8ed;border-radius:14px;padding:24px 20px;margin:18px 0;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04);position:relative;overflow:hidden}
-    .cta::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0071e3,#30d158)}
-    .cta .e{font-size:2rem;margin-bottom:8px}.cta h3{font-size:0.88rem;font-weight:700;margin-bottom:5px}.cta p{font-size:0.7rem;color:#6e6e73;line-height:1.5;margin-bottom:12px}
+    .cta{background:#fff;border:1px solid #e8e8ed;border-radius:16px;padding:28px 24px;margin:20px 0;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.04);position:relative;overflow:hidden}
+    .cta::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#0071e3,#30d158,#ff9500)}
+    .cta .e{font-size:2rem;margin-bottom:10px}.cta h3{font-size:0.92rem;font-weight:800;margin-bottom:6px;letter-spacing:-0.02em}.cta p{font-size:0.72rem;color:#6e6e73;line-height:1.6;margin-bottom:14px}
+    .cta-feat{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:14px}
+    .cta-chip{padding:4px 10px;border-radius:6px;background:#f5f5f7;font-size:0.55rem;font-weight:600;color:#6e6e73}
+    .app-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+    .app-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:10px;font-family:inherit;font-size:0.72rem;font-weight:700;text-decoration:none;transition:.15s;border:none;cursor:pointer}
+    .app-btn:active{transform:scale(.97)}
+    .app-btn.gp{background:#1d1d1f;color:#fff}
+    .app-btn.gp:hover{background:#333}
+    .app-btn.as{background:#0071e3;color:#fff}
+    .app-btn.as:hover{background:#0077ed}
+    .app-btn.pl{background:linear-gradient(135deg,#ff9500,#ff6b00);color:#fff}
+    .app-btn.pl:hover{opacity:.9}
+    .app-btn svg{flex-shrink:0}
+
+    /* ── NEET SS Banner ── */
+    .neet-banner{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);border-radius:16px;padding:28px 24px;margin:20px 0;color:#fff;position:relative;overflow:hidden}
+    .neet-banner::after{content:'';position:absolute;top:-50%;right:-30%;width:200px;height:200px;background:radial-gradient(circle,rgba(0,113,227,0.15) 0%,transparent 70%);pointer-events:none}
+    .neet-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:6px;background:rgba(255,255,255,0.1);font-size:0.52rem;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px;backdrop-filter:blur(4px)}
+    .neet-title{font-size:1rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;line-height:1.3}
+    .neet-sub{font-size:0.68rem;font-weight:500;color:rgba(255,255,255,0.7);line-height:1.6;margin-bottom:14px}
+    .neet-books{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:16px}
+    .neet-book{padding:3px 10px;border-radius:5px;background:rgba(255,255,255,0.08);font-size:0.52rem;font-weight:600;color:rgba(255,255,255,0.85);border:1px solid rgba(255,255,255,0.08)}
+    .neet-features{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}
+    .neet-feat{padding:4px 10px;border-radius:6px;background:rgba(0,113,227,0.15);font-size:0.55rem;font-weight:600;color:#64b5f6;border:1px solid rgba(100,181,246,0.15)}
+    .neet-team{font-size:0.55rem;color:rgba(255,255,255,0.4);margin-top:14px;font-weight:500}
 
     /* ── LEADERBOARD ── */
     .lb-sec{margin:18px 0}
@@ -282,17 +306,79 @@
       <div id="solList"></div>
     </div>
 
-    <div class="cta"><div class="e">&#x1F4F1;</div><h3>Liked these questions?</h3><p>Get 1000+ MCQs, video lectures, mock tests &amp; progress tracking.</p><a href="https://play.google.com/store/apps/details?id=com.sushruta.lgs" target="_blank" class="btn bc">Download Sushruta LGS App</a></div>
+    <!-- Download App CTA -->
+    <div class="cta">
+      <div class="e">&#x1F4F2;</div>
+      <h3>Download the Sushruta LGS App</h3>
+      <p>1000+ MCQs, video lectures, mock tests &amp; progress tracking — all in your pocket.</p>
+      <div class="app-btns">
+        <a href="https://play.google.com/store/apps/details?id=com.ginger.sushruta" target="_blank" class="app-btn gp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-1.4l2.5 1.448a1 1 0 010 1.49l-2.5 1.448-2.532-2.534 2.532-2.852zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+          Google Play
+        </a>
+        <a href="https://apps.apple.com/in/app/sushruta-lgs/id6443898817" target="_blank" class="app-btn as">
+          <svg width="14" height="16" viewBox="0 0 14 17" fill="currentColor"><path d="M13.3 13.38c-.33.76-.72 1.46-1.18 2.1-.62.88-1.13 1.48-1.52 1.82-.61.56-1.26.84-1.96.86-.5 0-1.11-.14-1.82-.43-.71-.28-1.37-.43-1.97-.43-.63 0-1.3.15-2.02.43-.72.29-1.3.44-1.74.46-.67.04-1.34-.26-2-.88C.66 16.89.14 16.26-.28 15.33c-.46-.84-.7-1.72-.7-2.64 0-.97.21-1.81.63-2.51A3.7 3.7 0 011 8.84c.56-.47 1.16-.71 1.82-.73.53 0 1.23.17 2.1.5.86.33 1.42.5 1.66.5.18 0 .8-.2 1.84-.59.99-.36 1.82-.51 2.5-.46 1.85.15 3.24.88 4.16 2.2-1.66 1-2.48 2.41-2.46 4.22.02 1.41.53 2.58 1.51 3.52.45.42.95.75 1.5.99-.12.35-.25.68-.38 1zm-3.1-14.7c0 1.11-.4 2.14-1.21 3.1-.98 1.14-2.16 1.8-3.44 1.7a3.46 3.46 0 01-.03-.42c0-1.06.47-2.2 1.3-3.12.41-.47.94-.86 1.58-1.18.64-.31 1.24-.49 1.81-.52.02.15.02.3.02.44z"/></svg>
+          App Store
+        </a>
+      </div>
+    </div>
 
+    <!-- Leaderboard -->
     <div class="lb-sec" id="lbSection">
       <div class="lb-tp"><div class="lb-ti">&#x1F3C6; Today's Leaderboard</div><div class="lb-ct" id="lbCt"></div></div>
       <div class="lb-ls" id="lbList"></div>
     </div>
 
-    <div class="cta"><div class="e">&#x1F393;</div><h3>Join surgical PG aspirants preparing smarter</h3><p>Comprehensive Q-banks, video lectures, notes — everything in one place.</p><a href="https://play.google.com/store/apps/details?id=com.sushruta.lgs" target="_blank" class="btn bc">Get the App — Free to Start</a></div>
+    <!-- NEET SS Banner -->
+    <div class="neet-banner">
+      <div class="neet-badge">&#x1FA7A; NEET SS 2026</div>
+      <div class="neet-title">Sushruta LGS — Surgical Group</div>
+      <div class="neet-sub">India's only prep platform built on Bailey 28th + Sabiston 22nd + Schwartz 11th — all integrated in one place.</div>
+      <div class="neet-books">
+        <span class="neet-book">Bailey 28th Ed</span>
+        <span class="neet-book">Sabiston 22nd Ed</span>
+        <span class="neet-book">Schwartz 11th Ed</span>
+      </div>
+      <div class="neet-features">
+        <span class="neet-feat">MCQs</span>
+        <span class="neet-feat">Live Lectures</span>
+        <span class="neet-feat">Mock Exams</span>
+        <span class="neet-feat">Videos</span>
+        <span class="neet-feat">eNotes</span>
+        <span class="neet-feat">Hardcopy Notes</span>
+      </div>
+      <a href="https://plans.sushrutalgs.in" target="_blank" class="app-btn pl" style="width:100%;justify-content:center">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Explore Plans &amp; Subscribe
+      </a>
+      <div class="neet-team">— Team Sushruta LGS</div>
+    </div>
+
+    <!-- Second App CTA -->
+    <div class="cta">
+      <div class="e">&#x1F393;</div>
+      <h3>Join surgical PG aspirants preparing smarter</h3>
+      <p>Comprehensive Q-banks, video lectures, notes — everything in one place.</p>
+      <div class="cta-feat">
+        <span class="cta-chip">&#x1F4DA; 1000+ MCQs</span>
+        <span class="cta-chip">&#x1F3AC; Video Lectures</span>
+        <span class="cta-chip">&#x1F4DD; Mock Tests</span>
+        <span class="cta-chip">&#x1F4C8; Progress Tracking</span>
+      </div>
+      <div class="app-btns">
+        <a href="https://play.google.com/store/apps/details?id=com.ginger.sushruta" target="_blank" class="app-btn gp">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.609-.92zm10.89 10.893l2.302 2.302-10.937 6.333 8.635-8.635zm3.199-1.4l2.5 1.448a1 1 0 010 1.49l-2.5 1.448-2.532-2.534 2.532-2.852zM5.864 2.658L16.8 8.99l-2.302 2.302-8.634-8.634z"/></svg>
+          Google Play
+        </a>
+        <a href="https://apps.apple.com/in/app/sushruta-lgs/id6443898817" target="_blank" class="app-btn as">
+          <svg width="14" height="16" viewBox="0 0 14 17" fill="currentColor"><path d="M13.3 13.38c-.33.76-.72 1.46-1.18 2.1-.62.88-1.13 1.48-1.52 1.82-.61.56-1.26.84-1.96.86-.5 0-1.11-.14-1.82-.43-.71-.28-1.37-.43-1.97-.43-.63 0-1.3.15-2.02.43-.72.29-1.3.44-1.74.46-.67.04-1.34-.26-2-.88C.66 16.89.14 16.26-.28 15.33c-.46-.84-.7-1.72-.7-2.64 0-.97.21-1.81.63-2.51A3.7 3.7 0 011 8.84c.56-.47 1.16-.71 1.82-.73.53 0 1.23.17 2.1.5.86.33 1.42.5 1.66.5.18 0 .8-.2 1.84-.59.99-.36 1.82-.51 2.5-.46 1.85.15 3.24.88 4.16 2.2-1.66 1-2.48 2.41-2.46 4.22.02 1.41.53 2.58 1.51 3.52.45.42.95.75 1.5.99-.12.35-.25.68-.38 1zm-3.1-14.7c0 1.11-.4 2.14-1.21 3.1-.98 1.14-2.16 1.8-3.44 1.7a3.46 3.46 0 01-.03-.42c0-1.06.47-2.2 1.3-3.12.41-.47.94-.86 1.58-1.18.64-.31 1.24-.49 1.81-.52.02.15.02.3.02.44z"/></svg>
+          App Store
+        </a>
+      </div>
+    </div>
   </div>
 
-  <div class="ft"><a href="https://sushrutalgs.in" target="_blank">Sushruta LGS</a> &middot; New quiz daily at midnight IST &middot; &copy; Sushruta Educations LLP</div>
+  <div class="ft"><a href="https://sushrutalgs.in" target="_blank">Sushruta LGS</a> &middot; <a href="https://plans.sushrutalgs.in" target="_blank">Plans</a> &middot; New quiz daily at midnight IST &middot; &copy; Sushruta Educations LLP</div>
 </div>
 
 <script>
