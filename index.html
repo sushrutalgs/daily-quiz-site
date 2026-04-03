@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sushruta LGS - Daily Quiz</title>
+  <meta name="description" content="Free daily MCQ quiz for surgical PG aspirants. 5 new questions every day. Test your knowledge and climb the leaderboard!">
+  <meta property="og:title" content="Sushruta LGS - Daily Quiz">
+  <meta property="og:description" content="5 free MCQs every day. Attempt now and see where you rank!">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-card: #14141f;
+      --bg-hover: #1a1a2e;
+      --border: #2a2a3e;
+      --text: #e8e8f0;
+      --text-dim: #8888a0;
+      --accent: #7c5cfc;
+      --accent-glow: rgba(124, 92, 252, 0.3);
+      --green: #34d399;
+      --red: #f87171;
+      --gold: #fbbf24;
+      --silver: #94a3b8;
+      --bronze: #d97706;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 24px 0 16px;
+    }
+    .header .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    .header h1 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header .subtitle {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+    .header .date-badge {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(124, 92, 252, 0.1);
+      border: 1px solid rgba(124, 92, 252, 0.3);
+      font-size: 0.7rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 10px;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
+    .stats-row span { font-weight: 700; color: var(--text); }
+
+    /* Screens */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* Nickname screen */
+    .nickname-screen {
+      text-align: center;
+      padding: 40px 0;
+    }
+    .nickname-screen h2 {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+    .nickname-screen p {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+    .nickname-input {
+      width: 100%;
+      max-width: 300px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 2px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-family: inherit;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .nickname-input:focus { border-color: var(--accent); }
+    .nickname-input::placeholder { color: var(--text-dim); }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 28px;
+      border-radius: 12px;
+      border: none;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #a78bfa);
+      color: #fff;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 24px var(--accent-glow); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-outline {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+    .btn-outline:hover { background: rgba(124, 92, 252, 0.1); }
+    .btn-cta {
+      background: linear-gradient(135deg, #34d399, #059669);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3);
+      width: 100%;
+      padding: 14px;
+      font-size: 0.9rem;
+    }
+
+    /* Quiz */
+    .progress-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .progress-dot {
+      flex: 1;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border);
+      transition: background 0.3s;
+    }
+    .progress-dot.done { background: var(--green); }
+    .progress-dot.current { background: var(--accent); }
+
+    .question-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .question-num {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .question-text {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      white-space: pre-wrap;
+    }
+    .question-img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 0.82rem;
+    }
+    .option:hover { border-color: var(--accent); background: var(--bg-hover); }
+    .option.selected { border-color: var(--accent); background: rgba(124, 92, 252, 0.15); }
+    .option .opt-letter {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+    .option.selected .opt-letter { background: var(--accent); color: #fff; }
+    .option .opt-text { flex: 1; }
+    .option-img { max-width: 100%; border-radius: 6px; margin-top: 4px; }
+
+    .quiz-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .quiz-nav .btn { flex: 1; padding: 10px; font-size: 0.8rem; }
+
+    .timer {
+      text-align: center;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+    .timer span { font-weight: 700; color: var(--text); font-size: 0.85rem; }
+
+    /* Results */
+    .results-screen { text-align: center; padding: 20px 0; }
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 4px solid var(--accent);
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 16px 0;
+    }
+    .score-circle .num { font-size: 2rem; font-weight: 800; }
+    .score-circle .of { font-size: 0.7rem; color: var(--text-dim); }
+    .score-msg { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 20px; }
+
+    .answer-review {
+      text-align: left;
+      margin: 16px 0;
+    }
+    .answer-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+    .answer-item.correct { border-left: 3px solid var(--green); }
+    .answer-item.wrong { border-left: 3px solid var(--red); }
+    .answer-item .q-text { font-size: 0.78rem; margin-bottom: 6px; line-height: 1.4; }
+    .answer-item .a-row {
+      display: flex;
+      gap: 8px;
+      font-size: 0.7rem;
+    }
+    .answer-item .badge {
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.65rem;
+    }
+    .badge-correct { background: rgba(52, 211, 153, 0.15); color: var(--green); }
+    .badge-wrong { background: rgba(248, 113, 113, 0.15); color: var(--red); }
+
+    .explanation-gate {
+      background: linear-gradient(135deg, rgba(124, 92, 252, 0.1), rgba(167, 139, 250, 0.05));
+      border: 1px dashed var(--accent);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+      text-align: center;
+    }
+    .explanation-gate p { font-size: 0.78rem; color: var(--text-dim); margin-bottom: 10px; }
+
+    /* Leaderboard */
+    .leaderboard {
+      margin: 16px 0;
+    }
+    .leaderboard h3 {
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .lb-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      margin-bottom: 4px;
+      font-size: 0.78rem;
+    }
+    .lb-row.top-1 { border-color: var(--gold); background: rgba(251, 191, 36, 0.08); }
+    .lb-row.top-2 { border-color: var(--silver); background: rgba(148, 163, 184, 0.06); }
+    .lb-row.top-3 { border-color: var(--bronze); background: rgba(217, 119, 6, 0.06); }
+    .lb-rank {
+      width: 24px;
+      font-weight: 800;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .lb-name { flex: 1; font-weight: 600; }
+    .lb-score { font-weight: 700; color: var(--accent); }
+    .lb-time { font-size: 0.65rem; color: var(--text-dim); }
+    .medal { font-size: 1rem; }
+
+    /* Share */
+    .share-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 12px 0;
+    }
+    .share-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .share-btn:hover { background: var(--bg-hover); border-color: var(--accent); }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--text-dim);
+    }
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 24px 0;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+
+    /* Responsive */
+    @media (max-width: 400px) {
+      .container { padding: 10px; }
+      .question-text { font-size: 0.85rem; }
+      .option { padding: 10px; font-size: 0.78rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">S</div>
+      <h1>Sushruta Daily Quiz</h1>
+      <div class="subtitle">5 free MCQs every day for surgical PG aspirants</div>
+      <div class="date-badge" id="dateBadge"></div>
+      <div class="stats-row">
+        <div><span id="todayAttempts">-</span> attempted today</div>
+        <div><span id="totalAttempts">-</span> total attempts</div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div class="screen active" id="loadingScreen">
+      <div class="loading">
+        <div class="spinner"></div>
+        Loading today's quiz...
+      </div>
+    </div>
+
+    <!-- Nickname -->
+    <div class="screen" id="nicknameScreen">
+      <div class="nickname-screen">
+        <h2>Ready to test yourself?</h2>
+        <p>Enter a nickname for the leaderboard. No login required.</p>
+        <input type="text" class="nickname-input" id="nicknameInput" placeholder="e.g. Dr. Sharma" maxlength="30" autocomplete="off">
+        <div style="margin-top: 16px;">
+          <button class="btn btn-primary" id="startBtn" onclick="startQuiz()">Start Quiz</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quiz -->
+    <div class="screen" id="quizScreen">
+      <div class="timer">Time: <span id="timerDisplay">0:00</span></div>
+      <div class="progress-bar" id="progressBar"></div>
+      <div id="questionContainer"></div>
+      <div class="quiz-nav">
+        <button class="btn btn-outline" id="prevBtn" onclick="prevQuestion()">Back</button>
+        <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="screen" id="resultsScreen">
+      <div class="results-screen">
+        <h2>Quiz Complete!</h2>
+        <div class="score-circle">
+          <div class="num" id="scoreNum">0</div>
+          <div class="of" id="scoreOf">of 5</div>
+        </div>
+        <div class="score-msg" id="scoreMsg"></div>
+
+        <div class="share-row">
+          <button class="share-btn" onclick="shareWhatsApp()">Share on WhatsApp</button>
+          <button class="share-btn" onclick="copyLink()">Copy Link</button>
+        </div>
+
+        <div class="answer-review" id="answerReview"></div>
+
+        <div class="explanation-gate">
+          <p>Want detailed explanations with textbook references?</p>
+          <a href="https://play.google.com/store/apps/details?id=com.sushruta.lgs" target="_blank" class="btn btn-cta">
+            Get Full Solutions on Sushruta LGS App
+          </a>
+        </div>
+
+        <div class="leaderboard" id="leaderboardSection">
+          <h3>Today's Leaderboard</h3>
+          <div id="leaderboardList"></div>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <a href="https://play.google.com/store/apps/details?id=com.sushruta.lgs" target="_blank" class="btn btn-cta">
+            Download Sushruta LGS App - 1000+ MCQs, Video Lectures & More
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Powered by <a href="https://sushrutalgs.in" target="_blank">Sushruta LGS</a> &middot; New quiz every day at midnight IST
+    </div>
+  </div>
+
+  <script>
+    // Config
+    const API = 'https://api.sushrutalgs.in';
+
+    // State
+    let questions = [];
+    let answers = {};
+    let currentQ = 0;
+    let nickname = '';
+    let startTime = 0;
+    let timerInterval = null;
+    let quizDate = '';
+
+    // Init
+    async function init() {
+      try {
+        // Fetch quiz and stats in parallel
+        const [quizRes, statsRes] = await Promise.all([
+          fetch(`${API}/api/public/daily-quiz`).then(r => r.json()),
+          fetch(`${API}/api/public/daily-quiz/stats`).then(r => r.json())
+        ]);
+
+        const quiz = quizRes.data || quizRes;
+        const stats = statsRes.data || statsRes;
+
+        quizDate = quiz.date;
+        questions = quiz.questions || [];
+
+        // Update UI
+        document.getElementById('dateBadge').textContent = formatDate(quizDate);
+        document.getElementById('todayAttempts').textContent = stats.today_attempts || 0;
+        document.getElementById('totalAttempts').textContent = stats.total_attempts || 0;
+
+        showScreen('loadingScreen', false);
+
+        if (quiz.already_attempted) {
+          // Already attempted — show leaderboard directly
+          const lbRes = await fetch(`${API}/api/public/daily-quiz/leaderboard`).then(r => r.json());
+          const lb = lbRes.data || lbRes;
+          showAlreadyAttempted(quiz.previous_score, lb.leaderboard);
+          return;
+        }
+
+        if (!questions.length) {
+          document.getElementById('nicknameScreen').innerHTML = '<div class="nickname-screen"><h2>No quiz available today</h2><p>Check back tomorrow!</p></div>';
+        }
+
+        showScreen('nicknameScreen', true);
+
+        // Restore nickname from localStorage
+        const saved = localStorage.getItem('sq_nickname');
+        if (saved) document.getElementById('nicknameInput').value = saved;
+
+        // Enter key to start
+        document.getElementById('nicknameInput').addEventListener('keypress', e => {
+          if (e.key === 'Enter') startQuiz();
+        });
+
+      } catch (err) {
+        console.error('Init error:', err);
+        document.getElementById('loadingScreen').innerHTML = '<div class="loading" style="color:var(--red);">Failed to load quiz. Please refresh.</div>';
+      }
+    }
+
+    function showScreen(id, show) {
+      document.getElementById(id).classList.toggle('active', show);
+    }
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    function showAlreadyAttempted(score, leaderboard) {
+      document.getElementById('scoreNum').textContent = score || 0;
+      document.getElementById('scoreOf').textContent = `of ${questions.length || 5}`;
+      document.getElementById('scoreMsg').textContent = "You've already attempted today's quiz!";
+      document.getElementById('answerReview').innerHTML = '<p style="text-align:center;color:var(--text-dim);font-size:0.78rem;">Come back tomorrow for a new quiz!</p>';
+      renderLeaderboard(leaderboard || []);
+      showScreen('resultsScreen', true);
+    }
+
+    // Start
+    function startQuiz() {
+      nickname = document.getElementById('nicknameInput').value.trim();
+      if (!nickname) {
+        document.getElementById('nicknameInput').style.borderColor = 'var(--red)';
+        return;
+      }
+      localStorage.setItem('sq_nickname', nickname);
+
+      currentQ = 0;
+      answers = {};
+      startTime = Date.now();
+
+      // Build progress bar
+      const pb = document.getElementById('progressBar');
+      pb.innerHTML = questions.map((_, i) => `<div class="progress-dot" id="pd-${i}"></div>`).join('');
+
+      renderQuestion();
+      showScreen('nicknameScreen', false);
+      showScreen('quizScreen', true);
+
+      // Start timer
+      timerInterval = setInterval(updateTimer, 1000);
+      updateTimer();
+    }
+
+    function updateTimer() {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const m = Math.floor(elapsed / 60);
+      const s = elapsed % 60;
+      document.getElementById('timerDisplay').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+    }
+
+    // Render question
+    function renderQuestion() {
+      const q = questions[currentQ];
+      const c = document.getElementById('questionContainer');
+
+      // Update progress
+      questions.forEach((_, i) => {
+        const dot = document.getElementById(`pd-${i}`);
+        dot.className = 'progress-dot';
+        if (i < currentQ) dot.classList.add('done');
+        if (i === currentQ) dot.classList.add('current');
+        if (answers[questions[i]._id]) dot.classList.add('done');
+      });
+
+      let html = `<div class="question-card">
+        <div class="question-num">Question ${q.number} of ${questions.length}</div>`;
+
+      if (q.question_image && q.question_image.length && q.question_image[0]) {
+        q.question_image.forEach(img => {
+          if (img) html += `<img src="${img.startsWith('http') ? img : API + '/' + img}" class="question-img" alt="Question image">`;
+        });
+      }
+
+      html += `<div class="question-text">${escapeHtml(q.question_text || '')}</div>
+        <div class="options">`;
+
+      const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+      q.options.forEach((opt, i) => {
+        const sel = answers[q._id] === opt.value ? 'selected' : '';
+        html += `<div class="option ${sel}" onclick="selectOption('${q._id}', '${escapeAttr(opt.value)}')">
+          <div class="opt-letter">${letters[i] || i + 1}</div>
+          <div class="opt-text">
+            ${escapeHtml(opt.answer_title || opt.value)}
+            ${opt.answer_image ? `<img src="${opt.answer_image.startsWith('http') ? opt.answer_image : API + '/' + opt.answer_image}" class="option-img" alt="">` : ''}
+          </div>
+        </div>`;
+      });
+
+      html += `</div></div>`;
+      c.innerHTML = html;
+
+      // Nav buttons
+      document.getElementById('prevBtn').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+      const nextBtn = document.getElementById('nextBtn');
+      if (currentQ === questions.length - 1) {
+        nextBtn.textContent = 'Submit';
+        nextBtn.onclick = submitQuiz;
+      } else {
+        nextBtn.textContent = 'Next';
+        nextBtn.onclick = nextQuestion;
+      }
+    }
+
+    function selectOption(qid, value) {
+      answers[qid] = value;
+      renderQuestion();
+    }
+
+    function nextQuestion() {
+      if (currentQ < questions.length - 1) {
+        currentQ++;
+        renderQuestion();
+      }
+    }
+
+    function prevQuestion() {
+      if (currentQ > 0) {
+        currentQ--;
+        renderQuestion();
+      }
+    }
+
+    // Submit
+    async function submitQuiz() {
+      const unanswered = questions.filter(q => !answers[q._id]).length;
+      if (unanswered > 0) {
+        if (!confirm(`You have ${unanswered} unanswered question${unanswered > 1 ? 's' : ''}. Submit anyway?`)) return;
+      }
+
+      clearInterval(timerInterval);
+      const timeTaken = Math.floor((Date.now() - startTime) / 1000);
+
+      showScreen('quizScreen', false);
+      showScreen('loadingScreen', true);
+      document.getElementById('loadingScreen').innerHTML = '<div class="loading"><div class="spinner"></div>Calculating your score...</div>';
+
+      try {
+        const body = {
+          nickname,
+          time_taken: timeTaken,
+          answers: questions.map(q => ({
+            question_id: q._id,
+            selected: answers[q._id] || ''
+          }))
+        };
+
+        const res = await fetch(`${API}/api/public/daily-quiz/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        }).then(r => r.json());
+
+        const data = res.data || res;
+        showResults(data, timeTaken);
+      } catch (err) {
+        console.error('Submit error:', err);
+        alert('Failed to submit. Please try again.');
+        showScreen('loadingScreen', false);
+        showScreen('quizScreen', true);
+        timerInterval = setInterval(updateTimer, 1000);
+      }
+    }
+
+    // Results
+    function showResults(data, timeTaken) {
+      showScreen('loadingScreen', false);
+
+      const score = data.score || 0;
+      const total = data.total || questions.length;
+
+      document.getElementById('scoreNum').textContent = score;
+      document.getElementById('scoreOf').textContent = `of ${total}`;
+
+      const pct = (score / total) * 100;
+      const msgs = [
+        [80, "Excellent! You're well-prepared!"],
+        [60, "Good job! Keep practicing!"],
+        [40, "Not bad! Room for improvement."],
+        [0, "Keep studying, you'll get there!"]
+      ];
+      document.getElementById('scoreMsg').textContent = (msgs.find(m => pct >= m[0]) || msgs[msgs.length - 1])[1];
+      document.getElementById('scoreMsg').textContent += ` (${formatTime(timeTaken)})`;
+
+      // Score circle color
+      const circle = document.querySelector('.score-circle');
+      if (pct >= 80) circle.style.borderColor = 'var(--green)';
+      else if (pct >= 40) circle.style.borderColor = 'var(--gold)';
+      else circle.style.borderColor = 'var(--red)';
+
+      // Answer review
+      const review = document.getElementById('answerReview');
+      let html = '';
+      (data.answers || []).forEach((a, i) => {
+        const q = questions[i];
+        const cls = a.correct ? 'correct' : 'wrong';
+        html += `<div class="answer-item ${cls}">
+          <div class="q-text">${i + 1}. ${escapeHtml(q?.question_text?.substring(0, 120) || '')}${q?.question_text?.length > 120 ? '...' : ''}</div>
+          <div class="a-row">
+            <span class="badge ${a.correct ? 'badge-correct' : 'badge-wrong'}">${a.correct ? 'Correct' : 'Wrong'}</span>
+            <span style="color:var(--text-dim)">Your answer: ${a.selected || 'Skipped'}</span>
+            ${!a.correct ? `<span style="color:var(--green)">Correct: ${a.correct_option}</span>` : ''}
+          </div>
+        </div>`;
+      });
+      review.innerHTML = html;
+
+      // Leaderboard
+      renderLeaderboard(data.leaderboard || []);
+
+      showScreen('resultsScreen', true);
+    }
+
+    function renderLeaderboard(entries) {
+      const list = document.getElementById('leaderboardList');
+      if (!entries.length) {
+        list.innerHTML = '<div style="text-align:center;color:var(--text-dim);font-size:0.75rem;padding:12px;">Be the first to attempt!</div>';
+        return;
+      }
+
+      const medals = ['', '\uD83E\uDD47', '\uD83E\uDD48', '\uD83E\uDD49'];
+      list.innerHTML = entries.map((e, i) => {
+        const rank = i + 1;
+        const topCls = rank <= 3 ? ` top-${rank}` : '';
+        return `<div class="lb-row${topCls}">
+          <div class="lb-rank">${medals[rank] || rank}</div>
+          <div class="lb-name">${escapeHtml(e.nickname)}</div>
+          <div class="lb-score">${e.score}/${e.total}</div>
+          <div class="lb-time">${formatTime(e.time_taken)}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // Share
+    function shareWhatsApp() {
+      const score = document.getElementById('scoreNum').textContent;
+      const total = document.getElementById('scoreOf').textContent.replace('of ', '');
+      const text = `I scored ${score}/${total} on today's Sushruta Daily Quiz! Can you beat me?\n\nAttempt now: ${window.location.href}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const btn = event.target;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy Link'; }, 2000);
+      });
+    }
+
+    // Helpers
+    function formatTime(s) {
+      if (!s) return '0s';
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return m > 0 ? `${m}m ${sec}s` : `${sec}s`;
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function escapeAttr(str) {
+      return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    // Go
+    init();
+  </script>
+</body>
+</html>
