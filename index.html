@@ -427,6 +427,9 @@
 
 <script>
 const API='https://api.sushrutalgs.in';
+// Unique device fingerprint — each browser gets its own UUID so students on same WiFi aren't blocked
+function getDeviceId(){let d=localStorage.getItem('sq_did');if(!d){d=crypto.randomUUID?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:r&0x3|0x8).toString(16)});localStorage.setItem('sq_did',d)}return d}
+const DEVICE_ID=getDeviceId();
 let qs=[],ans={},cq=0,nick='',t0=0,ti=null,qd='',sd=null;
 const $=id=>document.getElementById(id),sh=(id,v)=>$(id).classList.toggle('on',v);
 const esc=s=>{const d=document.createElement('div');d.textContent=s;return d.innerHTML};
@@ -506,7 +509,7 @@ function renderExpl(text){
 
 async function init(){
   try{
-    const[qr,sr]=await Promise.all([fetch(`${API}/api/public/daily-quiz`).then(r=>r.json()),fetch(`${API}/api/public/daily-quiz/stats`).then(r=>r.json())]);
+    const[qr,sr]=await Promise.all([fetch(`${API}/api/public/daily-quiz?device_id=${DEVICE_ID}`).then(r=>r.json()),fetch(`${API}/api/public/daily-quiz/stats`).then(r=>r.json())]);
     const quiz=qr.data||qr,stats=sr.data||sr;
     qd=quiz.date;qs=quiz.questions||[];
     $('dateBadge').textContent=fd(qd);
@@ -585,7 +588,7 @@ async function submitQuiz(){
   clearInterval(ti);const tt=Math.floor((Date.now()-t0)/1000);
   sh('quizScreen',false);sh('loadingScreen',true);$('loadingScreen').innerHTML='<div class="ld"><div class="ld-spin"></div><div class="ld-txt">Calculating your score...</div></div>';
   try{
-    const body={nickname:nick,time_taken:tt,answers:qs.map(q=>({question_id:q._id,selected:ans[q._id]||''}))};
+    const body={nickname:nick,time_taken:tt,device_id:DEVICE_ID,answers:qs.map(q=>({question_id:q._id,selected:ans[q._id]||''}))};
     const res=await fetch(`${API}/api/public/daily-quiz/submit`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json());
     sd=res.data||res;sh('loadingScreen',false);showResults(sd,tt);
   }catch(e){console.error(e);alert('Failed. Try again.');sh('loadingScreen',false);sh('quizScreen',true);ti=setInterval(tick,1000)}
