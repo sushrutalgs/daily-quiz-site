@@ -996,7 +996,7 @@ function renderQ(){
   var K='ABCDEF';
   q.options.forEach(function(o,i){
     var sl=ans[q._id]===o.value?' sel':'';
-    h+='<div class="opt'+sl+'" onclick="pick(\''+q._id+'\',\''+escA(o.value)+'\')"><div class="ok">'+K[i]||i+1+'</div><div class="ob">'+esc(o.answer_title||o.value)+(o.answer_image?'<img src="'+(o.answer_image.startsWith('http')?o.answer_image:API+'/'+o.answer_image)+'">':'')+'</div></div>';
+    h+='<div class="opt'+sl+'" onclick="pick(\''+q._id+'\',\''+escA(o.value)+'\')"><div class="ok">'+(K[i]||i+1)+'</div><div class="ob">'+esc(o.answer_title||o.value)+(o.answer_image?'<img src="'+(o.answer_image.startsWith('http')?o.answer_image:API+'/'+o.answer_image)+'">':'')+'</div></div>';
   });
   h+='</div>';
   $('questionContainer').innerHTML=h;
